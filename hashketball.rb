@@ -152,18 +152,48 @@ result = 0
   result
 end
 
-def shoe_size(searched_player)
-  game_hash.each do |home_or_away, team|
+
+def player_by_number(players_number)
+  game_hash[]
+  game_hash.each do |location, team|
     team.each do |attributes, stats|
       if attributes == :players
-        stats.each do |player|
-
-        return player[:shoe] if player[:player_name] == searched_player
+        stats.each do |players|
+          if players_number == players[:number]
+            return players[:name]
+          end
         end
       end
     end
   end
 end
+
+
+def shoe_size(searched_player)
+  players = game_hash.map do |location, team|
+   team[:players]
+  end
+  flat = players.flatten
+  person = flat.find {|a| a[:player_name] == searched_player}
+  binding.pry
+  return person[:shoe]
+
+end
+
+
+
+# def shoe_size(searched_player)
+#   game_hash.each do |home_or_away, team|
+#     team.each do |attributes, stats|
+#       if attributes == :players
+#         stats.each do |player|
+#
+#         return player[:shoe] if player[:player_name] == searched_player
+#         end
+#       end
+#     end
+#   end
+# end
 
 def team_colors(searched_team_name)
   game_hash.each do | location, team|
@@ -197,20 +227,22 @@ def player_numbers(searched_team_name)
 end
 
 def player_stats(searched_player)
-
-new_hash = {}
+  new_hash = {}
   game_hash.each do |location, team|
-
-    team.each do|attribute, data|
+    team.each do |attribute, stats|
       if attribute == :players
-        data.each do |players|
-
-          if players[:player_name] == searched_player
-            new_hash = players.delete_if do |key, value|
-              key == :player_name
-            end
-
-  #binding.pry
+        stats.each do |player|
+          if searched_player == player[:player_name]
+            new_hash = {
+              :number => player[:number],
+              :shoe => player[:shoe],
+              :points => player[:points],
+              :rebounds => player[:rebounds],
+              :assists => player[:assists],
+              :steals => player[:steals],
+              :blocks => player[:blocks],
+              :slam_dunks => player[:slam_dunks]
+            }
           end
         end
       end
@@ -218,6 +250,8 @@ new_hash = {}
   end
   new_hash
 end
+
+
 
 def big_shoe_rebounds
 memo = 0
